@@ -2,8 +2,15 @@
 
 set -euo pipefail
 
-if [[ -n ${BUILDKITE_PLUGIN_SKIP_CHECKOUT_CD+x} ]]
-then
-  echo "--- Setting checkout directory to $BUILDKITE_PLUGIN_SKIP_CHECKOUT_CD"
-  export BUILDKITE_BUILD_CHECKOUT_PATH=$BUILDKITE_PLUGIN_SKIP_CHECKOUT_CD
-fi
+git remote set-url origin git@bitbucket.org:ROKT/op2-workspace.git
+
+git submodule foreach --recursive git clean -ffxdq
+git clean -ffxdq
+
+git checkout origin/develop
+
+git submodule foreach 'git config -f $toplevel/.gitmodules submodule.$name.branch epic/spa'
+git config -f .gitmodules submodule.libs/${BUILDKITE_PIPELINE_SLUG}.branch ${BUILDKITE_BRANCH}
+git submodule update --remote --jobs 3
+
+git clean -ffxdq
