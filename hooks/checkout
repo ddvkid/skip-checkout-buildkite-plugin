@@ -3,3 +3,12 @@
 set -euo pipefail
 
 echo "--- Skipping checkout"
+
+git remote add ws git@bitbucket.org:ROKT/op2-workspace.git .
+git fetch ws & git checkout ws/develop
+
+git submodule foreach 'git config -f $toplevel/.gitmodules submodule.$name.branch epic/spa'
+git config -f .gitmodules submodule.libs/${BUILDKITE_PIPELINE_SLUG}.branch ${BUILDKITE_BRANCH}
+git submodule update --remote --jobs 3
+
+git clean -ffxdq
