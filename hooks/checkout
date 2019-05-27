@@ -4,7 +4,7 @@ set -euo pipefail
 
 echo "--- Skipping checkout"
 
-git remote add ws git@bitbucket.org:ROKT/op2-workspace.git .
+git remote add ws git@bitbucket.org:ROKT/op2-workspace.git
 git fetch ws & git checkout ws/develop
 
 git submodule foreach 'git config -f $toplevel/.gitmodules submodule.$name.branch epic/spa'
